@@ -1,0 +1,270 @@
+body {
+  font-family: 'Arial', sans-serif;  
+  background-color: #f5f5f5;
+  margin: auto;
+  text-align: center;
+}
+
+/* Menu Styles */
+.contenedor {
+  width: 500px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.10), 0 15px 12px rgba(0,0,0,0.05);
+  padding: 30px;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.menu-item {
+  background-color: #345ed3;
+  color: white;
+  text-decoration: none;
+  padding: 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+}
+
+
+
+.menu-item:hover {
+  background-color: #3d64cf;
+  transform: scale(1.05);
+}
+
+.logout-section {
+  margin-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+}
+
+/* Login form */
+.login-form, .contenedor {
+  width: 300px;
+  margin: 0 auto;
+}
+
+.login-form h1 {
+  text-align: center;
+  color: midnightblue;
+  font-size: 28px;
+  padding: 70px 0 10px 0;
+}
+
+.login-form input[type="password"],
+.login-form input[type="text"] {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ced4da;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+/* Login Button */
+.btn-login {
+  width: 100%;
+  padding: 15px;
+  background-color: #58ce48;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: large;
+  color: #ffffff;
+}
+
+.btn-login:hover, .btn-login:active {
+  color: #fff;
+  background-color: #58d149;
+  border-color: #41a533;
+}
+
+.btn-login:focus {
+  box-shadow: 0 0 0 3px rgba(101, 179, 82, 0.25);
+}
+
+/* Register Button */
+.btn-register {
+  width: 100%;
+  padding: 15px;
+  background-color: #345ed3;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: large;
+  color: #ffffff;
+  margin-top: 20px;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  text-decoration: none;  
+}
+
+.btn-register:hover, .btn-register:active {
+  color: #fff;
+  background-color: #3d64cf;
+  border-color: #103db9;
+}
+
+.btn-register:focus {
+  box-shadow: 0 0 0 3px #1053b9;
+}
+
+/* Login Link */
+.a-login:link, .a-login:visited {
+  background-color: white;
+  color: black;
+  border: 2px solid #10B981;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.a-login:hover, .a-login:active {
+  background-color: #10B981;
+  color: white;
+}
+
+/* Logout Link */
+.a-logout:link, .a-logout:visited {
+  background-color: white;
+  color: black;
+  border: 2px solid #F87171;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.a-logout:hover, .a-logout:active {
+  background-color: #F87171;
+  color: white;
+}
+
+/* Cancel Button */
+.btn-cancel {
+  width: 50%;
+  padding: 15px;
+  background-color: #9CA3AF;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: medium;
+  color: #ffffff;
+  text-align: center;
+  margin-top: 20px;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  text-decoration: none;  
+}
+
+.btn-cancel:hover, .btn-cancel:active {
+  color: #fff;
+  background-color: #6B7280;
+  border-color: #6B7280;
+}
+
+.btn-cancel:focus {
+  box-shadow: 0 0 0 3px #6B7280;
+}
+
+/* Save Button */
+.btn-save {
+  width: 50%;
+  padding: 15px;
+  background-color: #1D4ED8;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: medium;
+  color: #ffffff;
+  margin-top: 20px;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  text-decoration: none;  
+}
+
+.btn-save:hover, .btn-save:active {
+  color: #fff;
+  background-color: #1E3A8A;
+  border-color: #1E3A8A;
+}
+
+.btn-save:focus {
+  box-shadow: 0 0 0 3px #1E3A8A;
+}
+
+/* User Registration Form */
+.register-form {
+  width: 400px;
+  margin: 0 auto;
+  padding: 0px 20px 60px 20px;
+  margin-top: 35px;
+  font-family: Arial;  
+  text-align: left !important;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22); 
+}
+
+.register-form h1 {
+  text-align: left;
+  color: midnightblue;
+  font-size: 22px;
+  padding: 70px 0 10px 0;
+}
+
+.register-form input[type="password"],
+.register-form input[type="text"] {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ced4da;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+/* Select Dropdown Styles */
+.select-css {
+  display: block;
+  font-size: 16px;  
+  font-weight: 400;  
+  line-height: 1.3;
+  padding: .4em 1.4em .3em .8em;
+  width: 400px;
+  max-width: 100%; 
+  box-sizing: border-box;
+  margin: 0;  
+  background-color: #f5f5f5;  
+}
+
+.select-css::-ms-expand {
+  display: none;
+}
+
+.select-css:hover {
+  border-color: #888;
+}
+
+.select-css:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+  box-shadow: 0 0 0 3px -moz-mac-focusring;
+  color: #222; 
+  outline: none;
+}
+
+.select-css option {
+  font-weight: normal;
+}

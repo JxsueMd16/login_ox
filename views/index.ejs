@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="resources/css/style.css">
+    <title>Menú Principal</title>
+  </head>
+  <body>         
+    <div class="contenedor">
+      <h1>Menú Principal</h1>
+      <% if (login) { %>                
+        <h2>Bienvenido: <strong><%= name %></strong></h2>
+        
+        <div class="menu">
+          <a href="/nit" class="menu-item">NIT</a>
+          <a href="/cui" class="menu-item">CUI</a>
+          <div class="menu-item-center">
+            <a href="/facturas" class="menu-item">Facturas</a>
+          </div>
+        </div>
+
+        <div class="logout-section">
+          <a href="logout" class="a-logout">Cerrar Sesión</a>
+        </div>
+      <% } else { %>
+        <h1><strong><%= name %></strong></h1>   
+        <a href="login" class="a-login">Ir a Login</a>
+      <% } %>
+    </div>
+  </body>
+</html>
