@@ -34,7 +34,6 @@ body {
 }
 
 
-
 .menu-item:hover {
   background-color: #3d64cf;
   transform: scale(1.05);
@@ -69,6 +68,14 @@ body {
 }
 
 /* Login Button */
+.logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  padding-top: 20px;
+}
+
 .btn-login {
   width: 100%;
   padding: 15px;

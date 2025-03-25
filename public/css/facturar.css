@@ -1,0 +1,174 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    width: 350px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+h2 {
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.facturar-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.facturar-btn:hover {
+    background-color: #218838;
+}
+
+.facturado-btn {
+    background-color: #fd3232;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.facturar-btn, .facturado-btn {
+    width: 120px; /* Ancho fijo para ambos botones */
+    height: 40px; /* Alto fijo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.facturar-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.facturar-btn:hover {
+    background-color: #218838;
+}
+
+.facturado-btn {
+    background-color: #dc3545;
+    color: white;
+}
+/* Asegura que las celdas estén centradas */
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Botones con el mismo tamaño */
+.facturar-btn, .facturado-btn {
+    width: 120px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: auto; /* Esto los centra dentro de la celda */
+}
+
+/* Estilos específicos para cada botón */
+.facturar-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.facturar-btn:hover {
+    background-color: #218838;
+}
+
+.facturado-btn {
+    background-color: #dc3545;
+    color: white;
+}
+/* Estilo para el encabezado */
+.header-container {
+    text-align: center;
+    padding: 20px;
+}
+
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f8f9fa; /* Fondo suave */
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.filter-container label {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+.filter-container input {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.filter-container input:hover,
+.filter-container input:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+

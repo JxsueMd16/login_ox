@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="resources/css/facturar.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-container">
+            <img class="logo" src="https://i1.wp.com/oxdea.gt/wp-content/uploads/2020/06/logo.png?fit=491%2C151&ssl=1" alt="Logo Oxdea">
+            <h2>Sistema de Facturación</h2>
+        </div>
+
+        <div class="filter-container">
+            <label for="fecha">📅 Filtrar por fecha:</label>
+            <input type="date" id="fecha" onchange="filtrarFecha()">
+        </div>
+
+        <table id="tabla-facturas">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Order Date</th>
+                    <th>Total</th>
+                    <th>Nombre del Cliente</th>
+                    <th>Nit</th>
+                    <th>Facturar</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-body">
+                <% facturas.forEach(function(factura) { %>
+                    <tr>
+                        <td><%= factura.order_id %></td>
+                        <td class="order-date"><%= new Date(factura.order_date).toLocaleDateString('es-GT') %></td>
+                        <td>Q <%= factura.total_amount %></td>
+                        <td><%= factura.customer_name %></td>
+                        <td><%= factura.custom_billing_field %></td>
+                        <td>
+                            <button class="facturar-btn" onclick="facturarOrden('<%= factura.order_id %>')">
+                                <i class="fa-solid fa-receipt"></i> Facturar
+                            </button>                              
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function filtrarFecha() {
+            const fechaSeleccionada = document.getElementById("fecha").value;
+            const filas = document.querySelectorAll("#tabla-body tr");
+
+            filas.forEach(fila => {
+                const fechaTexto = fila.querySelector(".order-date").textContent.trim(); 
+                const fechaOrden = new Date(fechaTexto.split('/').reverse().join('-')).toISOString().split('T')[0]; 
+                
+                if (fechaSeleccionada === "" || fechaOrden === fechaSeleccionada) {
+                    fila.style.display = ""; 
+                } else {
+                    fila.style.display = "none"; 
+                }
+            });
+        }
+    </script>
+</body>
+</html>
