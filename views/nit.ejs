@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar NIT</title>
+    <link rel="stylesheet" href="resources/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="nit-consultation-container">
+            <h1>Introducir NIT</h1>
+            <img 
+                class="logo" 
+                src="https://i1.wp.com/oxdea.gt/wp-content/uploads/2020/06/logo.png?fit=491%2C151&ssl=1" 
+                alt="Logo SAT"
+            >
+            <br>
+            <form id="nitForm" method="POST" action="/nit">
+                <input 
+                    type="text" 
+                    id="nitInput" 
+                    name="nit" 
+                    placeholder="Número de NIT"
+                    required
+                    value="<%= locals.nit ? nit : '' %>"
+                >
+                <button type="submit">Consultar</button>
+            </form>
+
+            <% if (locals.resultado) { 
+                const nitData = resultado['soap:Envelope']['soap:Body']['getNITResponse']['getNITResult']['Response'];
+            %>
+                <div id="resultado" class="resultado-container">
+                    <div class="resultado-item">
+                        <strong>NIT:</strong> <%= nitData.NIT %>
+                    </div>
+                    <div class="resultado-item">
+                        <strong>Nombre:</strong> <%= nitData.nombre %>
+                    </div>
+                </div>
+            <% } %>
+
+            <% if (locals.error) { %>
+                <div class="error-message">
+                    <p><%= error %></p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('nitForm').addEventListener('submit', function(event) {
+            const nitInput = document.getElementById('nitInput');
+            const nitRegex = /^[0-9-]+$/;
+            
+            if (!nitRegex.test(nitInput.value)) {
+                event.preventDefault();
+                alert('Por favor, ingrese un NIT válido (solo números y guiones).');
+            }
+        });
+    </script>
+</body>
+</html>

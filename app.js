@@ -1,6 +1,8 @@
 //Invocamos a Express
 const express = require('express');
 const app = express();
+const axios = require('axios');
+const { XMLParser } = require('fast-xml-parser');
 
 
 //Para poder capturar los datos del formulario (sin urlencoded nos devuelve "undefined")
@@ -164,6 +166,72 @@ app.get('/facturas', (req, res) => {
     });
 });
 
+// Ruta para consultar NIT
+app.get('/nit', (req, res) => {
+    if (req.session.loggedin) {
+        res.render('nit', {
+            login: true,
+            name: req.session.name
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.post('/nit', async (req, res) => {
+    if (!req.session.loggedin) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const { nit } = req.body;
+
+        const soapRequest = 
+        `<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                <soap:Body>
+                    <getNIT xmlns="http://tempuri.org/">
+                        <vNIT>${nit}</vNIT>
+                        <Entity>800000001026</Entity>
+                        <Requestor>94E0301E-AD36-4BAC-B327-BA1C0638469E</Requestor>
+                    </getNIT>
+                </soap:Body>
+            </soap:Envelope>`;
+
+        const response = await axios.post(
+            'https://app.corposistemasgt.com/getnit/ConsultaNIT.asmx',
+            soapRequest,
+            {
+                headers: {
+                    'Content-Type': 'text/xml; charset=utf-8',
+                    'SOAPAction': 'http://tempuri.org/getNIT'
+                }
+            }
+        );
+
+        // Convertir XML a JSON
+        const parser = new XMLParser();
+        const jsonResponse = parser.parse(response.data);
+        
+        res.render('nit', {
+            login: true,
+            name: req.session.name,
+            resultado: jsonResponse,
+            nit: nit
+        });
+
+    } catch (error) {
+        console.error('Error en el servidor:', error);
+        res.render('nit', {
+            login: true,
+            name: req.session.name,
+            error: 'Error al consultar el NIT',
+            nit: nit
+        });
+    }
+});
 
 
 app.listen(3000, (req, res) => {

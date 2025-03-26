@@ -10,11 +10,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
+    "fast-xml-parser": "^5.0.9",
     "mysql": "^2.18.1",
     "mysql2": "^3.14.0",
     "nodemon": "^3.1.9",
