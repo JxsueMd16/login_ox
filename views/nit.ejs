@@ -52,11 +52,11 @@
     <script>
         document.getElementById('nitForm').addEventListener('submit', function(event) {
             const nitInput = document.getElementById('nitInput');
-            const nitRegex = /^[0-9-]+$/;
-            
-            if (!nitRegex.test(nitInput.value)) {
+            const nitRegex = /^[a-zA-Z0-9]+$/;
+
+            if (!nitRegex.test(nitInput.value.replace(/[-\s]/g, ''))) {
                 event.preventDefault();
-                alert('Por favor, ingrese un NIT válido (solo números y guiones).');
+                alert('Por favor, ingrese un NIT válido (solo letras y números, se permiten guiones).');
             }
         });
     </script>

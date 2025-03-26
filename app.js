@@ -81,6 +81,25 @@ app.post('/register', async (req, res) => {
     });
 });
 
+// Middleware to check authentication for all routes except login and register
+app.use((req, res, next) => {
+    // List of public routes that don't require authentication
+    const publicRoutes = ['/login', '/register', '/auth'];
+
+    // Check if the requested route is public
+    if (publicRoutes.includes(req.path)) {
+        return next();
+    }
+
+    // Check if user is logged in
+    if (req.session.loggedin) {
+        next();
+    } else {
+        // Redirect to login page for any protected route
+        res.redirect('/login');
+    }
+});
+
 //metodo para la autenticacion
 app.post('/auth', async (req, res) => {
     const user = req.body.user;
@@ -108,22 +127,15 @@ app.post('/auth', async (req, res) => {
                 // Crear sesión
                 req.session.loggedin = true;
                 req.session.name = results[0].nombre;
+                // Aquí puedes agregar el rol del usuario si lo necesitas
+                req.session.rol = results[0].idRol;
                 
-                res.render('login', {
-                    alert: true,
-                    alertTitle: "Conexión exitosa",
-                    alertMessage: "¡LOGIN CORRECTO!",
-                    alertIcon: 'success',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    ruta: ''
-                });
+                // Redirigir al index después del login exitoso
+                res.redirect('/');
             }
-            res.end();
         });
     } else {
         res.send('Por favor ingrese usuario y contraseña');
-        res.end();
     }
 });
 
@@ -139,7 +151,6 @@ app.get('/', (req, res) => {
         res.redirect('/login');
     }
 });
-
 
 //función para limpiar la caché luego del logout
 app.use(function (req, res, next) {
