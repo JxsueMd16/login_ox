@@ -167,6 +167,8 @@ app.get('/logout', function (req, res) {
     })
 });
 
+
+//Vista de facturas
 app.get('/facturas', (req, res) => {
     connection.query('SELECT * FROM mi_v_facturas', (err, rows) => {
         if (err) {
@@ -176,6 +178,49 @@ app.get('/facturas', (req, res) => {
         res.render('facturas', { facturas: rows });
     });
 });
+
+const os = require('os'); // Importamos el módulo OS para obtener la ruta del usuario
+const fs = require('fs');
+const path = require('path');
+
+app.post('/facturar/:orderId', (req, res) => {
+    const orderId = req.params.orderId;
+
+    connection.query('SELECT * FROM mi_v_facturas WHERE order_id = ?', [orderId], (err, rows) => {
+        if (err) {
+            console.error("Error en la consulta:", err);
+            return res.status(500).json({ error: "Error en la consulta a la base de datos." });
+        }
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: "Orden no encontrada." });
+        }
+
+        const factura = rows[0];
+        const fecha = new Date(factura.order_date).toISOString().split('T')[0];
+
+        //Obtener ruta del Escritorio del usuario
+        const escritorioPath = path.join(os.homedir(), 'Desktop');
+
+        //Nombre del archivo
+        const fileName = `factura_${orderId}_${fecha}.txt`;
+        const filePath = path.join(escritorioPath, fileName);
+
+        //Contenido de la factura
+        const contenido = `Factura de Orden\nID: ${factura.order_id}\nFecha: ${factura.order_date}\nTotal: Q${factura.total_amount}\nCliente: ${factura.customer_name}\nNIT: ${factura.custom_billing_field}\n`;
+
+        //Guardar el archivo en el Escritorio
+        fs.writeFile(filePath, contenido, (err) => {
+            if (err) {
+                console.error("Error al escribir el archivo:", err);
+                return res.status(500).json({ error: "Error al generar la factura." });
+            }
+            res.json({ success: true, fileName });
+        });
+    });
+});
+
+
 
 // Ruta para consultar NIT
 app.get('/nit', (req, res) => {
