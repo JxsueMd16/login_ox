@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const axios = require('axios');
 const { XMLParser } = require('fast-xml-parser');
+const { create } = require('xmlbuilder2');
 
 
 //Para poder capturar los datos del formulario (sin urlencoded nos devuelve "undefined")
@@ -183,43 +184,101 @@ const os = require('os'); // Importamos el módulo OS para obtener la ruta del u
 const fs = require('fs');
 const path = require('path');
 
-app.post('/facturar/:orderId', (req, res) => {
+app.post('/facturar/:orderId', async (req, res) => {
     const orderId = req.params.orderId;
 
-    connection.query('SELECT * FROM mi_v_facturas WHERE order_id = ?', [orderId], (err, rows) => {
-        if (err) {
-            console.error("Error en la consulta:", err);
-            return res.status(500).json({ error: "Error en la consulta a la base de datos." });
-        }
+    try {
+        // Obtener datos de la factura desde la base de datos
+        const [rows] = await connection.promise().query('SELECT * FROM mi_v_facturas WHERE order_id = ?', [orderId]);
 
         if (rows.length === 0) {
             return res.status(404).json({ error: "Orden no encontrada." });
         }
 
         const factura = rows[0];
-        const fecha = new Date(factura.order_date).toISOString().split('T')[0];
+        const fecha = new Date(factura.order_date).toISOString().split('T')[0]; // Fecha en formato YYYY-MM-DD
 
-        //Obtener ruta del Escritorio del usuario
+        // Calcular el IVA (puedes ajustar el cálculo si es necesario)
+        const iva = (factura.total_amount * 0.12).toFixed(2); // Suponiendo que el IVA es del 12%
+
+        // Generar XML con xmlbuilder2
+        const xml = create({ version: '1.0', encoding: 'utf-8' })
+            .ele('soap:Envelope', { 'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/' })
+            .ele('soap:Header')
+                .ele('Requestor').txt('0AB55B4F-7903-4337-874F-7CE69A9DD72A').up()
+                .ele('Authentication')
+                    .ele('Usuario').txt('alexis').up()
+                    .ele('Contrasena').txt('OxdeaS.A.').up()
+                .up()
+            .up()
+            .ele('soap:Body')
+                .ele('dte:GTDocumento', {
+                    'xmlns:ds': 'http://www.w3.org/2000/09/xmldsig#',
+                    'xmlns:dte': 'http://www.sat.gob.gt/dte/fel/0.2.0',
+                    'Version': '0.1'
+                })
+                .ele('dte:SAT', { ClaseDocumento: 'dte' })
+                    .ele('dte:DTE', { ID: 'DatosCertificados' })
+                        .ele('dte:DatosEmision', { ID: 'DatosEmision' })
+                            .ele('dte:DatosGenerales', { CodigoMoneda: 'GTQ', FechaHoraEmision: new Date().toISOString(), Tipo: 'FACT' }).up()
+                            .ele('dte:Emisor', { AfiliacionIVA: 'GEN', CodigoEstablecimiento: '1', NITEmisor: '120412772', NombreComercial: 'OxdeaS.A.', NombreEmisor: factura.customer_name || 'OxdeaS.A.' })
+                                .ele('dte:DireccionEmisor')
+                                    .ele('dte:Direccion').txt('Ciudad').up()
+                                    .ele('dte:CodigoPostal').txt('01000').up()
+                                    .ele('dte:Municipio').txt('Coban').up()
+                                    .ele('dte:Departamento').txt('Alta Verapaz').up()
+                                    .ele('dte:Pais').txt('GT').up()
+                                .up()
+                            .up()
+                            .ele('dte:Receptor', { IDReceptor: factura.custom_billing_field || 'CF', NombreReceptor: factura.customer_name || 'CF' })
+                                .ele('dte:DireccionReceptor')
+                                    .ele('dte:Direccion').txt('correoagmail.com').up()
+                                    .ele('dte:CodigoPostal').txt('01000').up()
+                                    .ele('dte:Municipio').txt('.').up()
+                                    .ele('dte:Departamento').txt('.').up()
+                                    .ele('dte:Pais').txt('GT').up()
+                                .up()
+                            .up()
+                            .ele('dte:Items')
+                                .ele('dte:Item', { BienOServicio: 'B', NumeroLinea: '1' })
+                                    .ele('dte:Cantidad').txt('1.0000000').up()
+                                    .ele('dte:UnidadMedida').txt('UNI').up()
+                                    .ele('dte:Descripcion').txt(factura.description || 'Producto sin descripción').up()
+                                    .ele('dte:PrecioUnitario').txt(factura.total_amount).up()
+                                    .ele('dte:Precio').txt(factura.total_amount).up()
+                                    .ele('dte:Total').txt(factura.total_amount).up()
+                                .up()
+                            .up()
+                            .ele('dte:Totales')
+                                .ele('dte:TotalImpuestos')
+                                    .ele('dte:TotalImpuesto', { NombreCorto: 'IVA', TotalMontoImpuesto: iva }).up()
+                                .up()
+                                .ele('dte:GranTotal').txt(factura.total_amount).up()
+                            .up()
+                        .up()
+                    .up()
+                .up()
+            .end({ prettyPrint: true });
+
+        // Guardar XML como .xml en el escritorio
         const escritorioPath = path.join(os.homedir(), 'Desktop');
+        const filePath = path.join(escritorioPath, `factura_${orderId}_${fecha}.txt`);
 
-        //Nombre del archivo
-        const fileName = `factura_${orderId}_${fecha}.txt`;
-        const filePath = path.join(escritorioPath, fileName);
+        // Guardamos el archivo .xml
+        fs.writeFileSync(filePath, xml);
 
-        //Contenido de la factura
-        const contenido = `Factura de Orden\nID: ${factura.order_id}\nFecha: ${factura.order_date}\nTotal: Q${factura.total_amount}\nCliente: ${factura.customer_name}\nNIT: ${factura.custom_billing_field}\n`;
+        // Simulamos la llamada a la SAT (sin conexión real)
+        // Deja un comentario o muestra un mensaje como prueba
+        console.log("Factura generada en:", filePath);
 
-        //Guardar el archivo en el Escritorio
-        fs.writeFile(filePath, contenido, (err) => {
-            if (err) {
-                console.error("Error al escribir el archivo:", err);
-                return res.status(500).json({ error: "Error al generar la factura." });
-            }
-            res.json({ success: true, fileName });
-        });
-    });
+        // Respondemos al cliente que la factura ha sido generada y guardada
+        return res.json({ success: true, filePath });
+
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ error: "Ocurrió un error al generar la factura." });
+    }
 });
-
 
 
 // Ruta para consultar NIT

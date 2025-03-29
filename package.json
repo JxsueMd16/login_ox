@@ -20,6 +20,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.14.0",
     "nodemon": "^3.1.9",
-    "pjox": "file:"
+    "pjox": "file:",
+    "xmlbuilder2": "^3.1.1"
   }
 }
